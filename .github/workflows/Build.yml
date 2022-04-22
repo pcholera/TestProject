@@ -45,6 +45,6 @@ jobs:
     needs: [ build, buildConfig ]
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: "RunnerTest"
-      targetLocation: "C:\\Hartree\\Sites\\RunnerTest"
+      appPoolName: ${{ secrets.DEV_APP_POOL_NAME }}
+      targetLocation: ${{ secrets.DEV_TARGET_LOCATION }}
       assemblyVersion: ${{ needs.buildConfig.outputs.assemblyVersion }}
