@@ -13,6 +13,10 @@ jobs:
     needs: buildConfig
     runs-on: self-hosted
 
+    outputs:
+      appPoolName: ${{ secrets.DEV_APP_POOL_NAME }}
+      targetLocation: ${{ secrets.DEV_TARGET_LOCATION }}
+
     steps:
     - uses: actions/checkout@v2
 
@@ -45,6 +49,6 @@ jobs:
     needs: [ build, buildConfig ]
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: ${{ secrets.DEV_APP_POOL_NAME }}
-      targetLocation: ${{ secrets.DEV_TARGET_LOCATION }}
+      appPoolName: ${{ needs.build.outputs.appPoolName }}
+      targetLocation: ${{ needs.build.outputs.targetLocation }}
       assemblyVersion: ${{ needs.buildConfig.outputs.assemblyVersion }}
