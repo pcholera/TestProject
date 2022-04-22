@@ -19,9 +19,6 @@ on:
         required: true
         type: string
 
-env:
-  projectName: "HPLP.Espresso.Gateway"
-
 jobs:      
   deploy:
     name: Deploy
@@ -29,7 +26,7 @@ jobs:
     steps:
       - name: Artifacts Location
         id: Artifact
-        run: echo "::set-output name=ArtifactLocation::..\Publish\${{ env.projectName }}\${{ inputs.assemblyVersion }}"
+        run: echo "::set-output name=ArtifactLocation::..\Publish\TestProject\${{ inputs.assemblyVersion }}"
 
       - name: Stop App Pool
         run: .\DeploymentScript\StopAppPool.ps1 ${{ inputs.appPoolName }}
