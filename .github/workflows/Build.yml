@@ -40,10 +40,11 @@ jobs:
       run: |
         Copy-Item -Path .\Publish -Destination ..\Publish\TestProject\${{ needs.buildConfig.outputs.buildVersion }} -recurse -Force
 
-    - name: Deploy To Dev
-      run: |
-        curl \
-          -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/pcholera/TestProject/dispatches \
-          -d '{"event_type":"Deploy To Dev Environment","client_payload":{ "assemblyVersion": "${{ needs.buildConfig.outputs.buildVersion }}" }}'
+  deploy_to_dev:
+    name: Deploy To Dev
+    needs: [ build, buildConfig ]
+    uses: ./.github/workflows/Deploy.yml
+    with:
+      appPoolName: "RunnerTest"
+      targetLocation: "C:\\Hartree\\Sites\\RunnerTest"
+      assemblyVersion: ${{ needs.buildConfig.outputs.assemblyVersion }}
