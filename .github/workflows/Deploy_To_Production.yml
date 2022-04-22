@@ -1,0 +1,19 @@
+name: Deploy To Production Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      assemblyVersion:
+        description: 'Assembly Version'
+        default: ''
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy
+    uses: ./.github/workflows/Deploy.yml
+    with:
+      appPoolName: "RunnerTestProd"
+      targetLocation: "C:\\Hartree\\Sites\\RunnerTestProd"
+      assemblyVersion: ${{ github.event.inputs.assemblyVersion }}

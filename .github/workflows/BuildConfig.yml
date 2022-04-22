@@ -1,0 +1,64 @@
+name: Get Build Config
+on:
+  workflow_call:
+    outputs:
+      repositoryName:
+        description: "Repository Name"
+        value: ${{ jobs.buildConfig.outputs.repositoryName }}
+
+      branchType:
+        description: "Branch Type"
+        value: ${{ jobs.buildConfig.outputs.branchType }}
+
+      buildVersion:
+        description: "Output Version Number"
+        value: ${{ jobs.buildConfig.outputs.version }}
+
+env:
+  GITHUB_REF: github.ref
+
+jobs:
+  buildConfig:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.buildVersion.outputs.number }}
+      branchType: ${{ steps.branchName.outputs.name }}
+      repositoryName: ${{ steps.repositoryName.outputs.name }}
+
+    steps:
+      - uses: rishabhgupta/split-by@v1
+        id: repositoryNameSplit
+        with:
+          string: ${{ github.repository }}
+          split-by: '/'
+
+      - uses: rishabhgupta/split-by@v1
+        id: branchNameSplit
+        with:
+          string: ${{ github.ref_name }}
+          split-by: '/'
+
+      - name: Generate Build Number
+        id: buildNumber
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{secrets.github_token}}
+
+      - name : Get Version Number
+        run: echo "package_version=0.0.${{ steps.buildNumber.outputs.build_number }}" >> $GITHUB_ENV;
+        shell: bash
+
+      - name: Repository Name
+        id: repositoryName
+        run: echo "::set-output name=name::${{ steps.repositoryNameSplit.outputs._1 }}";
+        shell: bash
+
+      - name: Branch Type
+        id: branchName
+        run: echo "::set-output name=name::${{ steps.branchNameSplit.outputs._0 }}";
+        shell: bash
+
+      - name: Version Number
+        id: buildVersion
+        run: echo "::set-output name=number::$package_version";
+        shell: bash
