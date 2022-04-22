@@ -14,6 +14,6 @@ jobs:
     name: Deploy
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: ${{ secrets.PROD_APP_POOL_NAME }}
-      targetLocation: ${{ secrets.PROD_TARGET_LOCATION }}
+      appPoolName: "RunnerTestProd"
+      targetLocation: "C:\\Hartree\\Sites\\RunnerTestProd"
       assemblyVersion: ${{ github.event.inputs.assemblyVersion }}

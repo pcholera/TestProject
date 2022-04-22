@@ -13,10 +13,6 @@ jobs:
     needs: buildConfig
     runs-on: self-hosted
 
-    outputs:
-      appPoolName: ${{ secrets.DEV_APP_POOL_NAME }}
-      targetLocation: ${{ secrets.DEV_TARGET_LOCATION }}
-
     steps:
     - uses: actions/checkout@v2
 
@@ -49,6 +45,6 @@ jobs:
     needs: [ build, buildConfig ]
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: ${{ needs.build.outputs.appPoolName }}
-      targetLocation: ${{ needs.build.outputs.targetLocation }}
+      appPoolName: "RunnerTest"
+      targetLocation: "C:\\Hartree\\Sites\\RunnerTest"
       assemblyVersion: ${{ needs.buildConfig.outputs.assemblyVersion }}
