@@ -77,4 +77,4 @@ jobs:
     with:
       appPoolName: ${{ needs.build.outputs.devAppPool }}
       targetLocation: ${{ needs.build.outputs.devTargetLocation }}
-      buildVersion: ${{ needs.buildConfig.outputs.buildVersion }}
+      assemblyVersion: ${{ needs.buildConfig.outputs.buildVersion }}
