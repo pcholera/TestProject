@@ -20,9 +20,16 @@ jobs:
 
     env:
       projectName: ${{ needs.buildConfig.outputs.repositoryName }}"
-      devAppPool: ${{ steps.devAppPool.outputs.devAppPool }}
-      devTargetLocation: ${{ steps.devTargetLocation.outputs.devTargetLocation }}
       projectPath: ${{ needs.buildConfig.outputs.repositoryName }}\${{ needs.buildConfig.outputs.repositoryName }}.csproj
+    
+    outputs:
+      devAppPool:
+        description: "Dev Application Pool"
+        value: ${{ steps.devAppPool.outputs.devAppPool }}
+
+      devTargetLocation:
+        description: "Dev Environment Deployment Location"
+        value: ${{ steps.devTargetLocation.outputs.devTargetLocation }}
 
     steps:
     - uses: actions/checkout@v2
