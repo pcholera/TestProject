@@ -8,18 +8,24 @@ on:
         default: ''
         required: true
         type: string
-    secrets:
-      appPoolName:
-        description: 'IIS Application Pool Name'
+      environment:
+        description: 'Deployment Environment'
+        default: ''
         required: true
-      targetLocation:
-        description: 'Trarget Location For Application'
-        required: true
+        type: string
+    # secrets:
+    #   appPoolName:
+    #     description: 'IIS Application Pool Name'
+    #     required: true
+    #   targetLocation:
+    #     description: 'Trarget Location For Application'
+    #     required: true
 
 jobs:      
   deploy:
     name: Deploy
     runs-on: self-hosted
+    environment: ${{ inputs.environment }}
     steps:
       - name: Artifacts Location
         id: Artifact

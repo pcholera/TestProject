@@ -69,6 +69,7 @@ jobs:
     uses: ./.github/workflows/Deploy.yml
     with:
       assemblyVersion: ${{ needs.buildConfig.outputs.buildVersion }}
-    secrets:
-      appPoolName: ${{ secrets.DEVAPPPOOL }}
-      targetLocation: ${{ secrets.DEVTARGETLOCATION }}
+      environment: dev
+    # secrets:
+    #   appPoolName: ${{ secrets.DEVAPPPOOL }}
+    #   targetLocation: ${{ secrets.DEVTARGETLOCATION }}
