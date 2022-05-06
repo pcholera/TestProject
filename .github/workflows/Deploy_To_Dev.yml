@@ -9,15 +9,12 @@ on:
         required: true
         type: string
 
-env:
-  devAppPool: ${{ secrets.DEVAPPPOOL }}
-  devTargetLocation: ${{ secrets.DEVTARGETLOCATION }}
-
 jobs:
   deploy:
     name: Deploy
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: ${{ env.devAppPool }}
-      targetLocation: ${{ env.devTargetLocation }}
       assemblyVersion: ${{ github.event.inputs.assemblyVersion }}
+    secrets:
+      appPoolName: ${{ secrets.DEVAPPPOOL }}
+      targetLocation: ${{ secrets.DEVTARGETLOCATION }}

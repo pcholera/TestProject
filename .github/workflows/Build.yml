@@ -38,14 +38,6 @@ jobs:
     - name: "Print Version Number"
       run: echo "Version = ${{ needs.buildConfig.outputs.buildVersion }}"
 
-    - name: "devAppPool"
-      id: devAppPool
-      run: echo '::set-output name=devAppPool::${{ secrets.DEVAPPPOOL }}'
-
-    - name: "devTargetLocation"
-      id: devTargetLocation
-      run: echo '::set-output name=devTargetLocation::${{ secrets.DEVTARGETLOCATION }}'
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -80,6 +72,7 @@ jobs:
     needs: [ build, buildConfig ]
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: ${{ needs.build.outputs.devAppPool }}
-      targetLocation: ${{ needs.build.outputs.devTargetLocation }}
       assemblyVersion: ${{ needs.buildConfig.outputs.buildVersion }}
+    secrets:
+      appPoolName: ${{ secrets.DEVAPPPOOL }}
+      targetLocation: ${{ secrets.DEVTARGETLOCATION }}

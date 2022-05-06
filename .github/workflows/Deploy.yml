@@ -3,6 +3,12 @@ name: Deploy
 on:
   workflow_call:
     inputs:
+      assemblyVersion:
+        description: 'Assembly Version'
+        default: ''
+        required: true
+        type: string
+    secrets:
       appPoolName:
         description: 'IIS Application Pool Name'
         default: 'Espresso'
@@ -11,11 +17,6 @@ on:
       targetLocation:
         description: 'Trarget Location For Application'
         default: '\\nyallegrowebd01\c$\inetpub\wwwroot\Espresso'
-        required: true
-        type: string
-      assemblyVersion:
-        description: 'Assembly Version'
-        default: ''
         required: true
         type: string
 
@@ -29,15 +30,15 @@ jobs:
         run: echo "::set-output name=ArtifactLocation::..\Publish\TestProject\${{ inputs.assemblyVersion }}"
 
       - name: Stop App Pool
-        run: .\DeploymentScript\StopAppPool.ps1 ${{ inputs.appPoolName }}
+        run: .\DeploymentScript\StopAppPool.ps1 ${{ secrets.appPoolName }}
 
       - name: Publish File To Server
         run: |
-          if (test-path "${{ inputs.targetLocation }}")
+          if (test-path "${{ secrets.targetLocation }}")
           {
-            Remove-Item -Recurse "${{ inputs.targetLocation }}"
+            Remove-Item -Recurse "${{ secrets.targetLocation }}"
           }
-          Copy-Item -Path ${{ steps.Artifact.outputs.ArtifactLocation }} -Destination "${{ inputs.targetLocation }}" -recurse -Force
+          Copy-Item -Path ${{ steps.Artifact.outputs.ArtifactLocation }} -Destination "${{ secrets.targetLocation }}" -recurse -Force
 
       - name: Start App Pool
-        run: .\DeploymentScript\StartAppPool.ps1 ${{ inputs.appPoolName }}
+        run: .\DeploymentScript\StartAppPool.ps1 ${{ secrets.appPoolName }}
