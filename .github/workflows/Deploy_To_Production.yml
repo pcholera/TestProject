@@ -15,7 +15,6 @@ jobs:
     uses: ./.github/workflows/Deploy.yml
     with:
       assemblyVersion: ${{ github.event.inputs.assemblyVersion }}
-      environment: production
-    # secrets:
-    #   appPoolName: ${{ secrets.PRODAPPPOOL }}
-    #   targetLocation: ${{ secrets.PRODTARGETLOCATION }}
+    secrets:
+      appPoolName: ${{ secrets.PRODAPPPOOL }}
+      targetLocation: ${{ secrets.PRODTARGETLOCATION }}

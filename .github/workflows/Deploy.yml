@@ -8,18 +8,13 @@ on:
         default: ''
         required: true
         type: string
-      environment:
-        description: 'Deployment Environment'
-        default: ''
+    secrets:
+      appPoolName:
+        description: 'IIS Application Pool Name'
         required: true
-        type: string
-    # secrets:
-    #   appPoolName:
-    #     description: 'IIS Application Pool Name'
-    #     required: true
-    #   targetLocation:
-    #     description: 'Trarget Location For Application'
-    #     required: true
+      targetLocation:
+        description: 'Trarget Location For Application'
+        required: true
 
 jobs:      
   deploy:
