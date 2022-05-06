@@ -1,6 +1,11 @@
 name: Build
 
-on: push
+on: 
+  push: 
+    branches:
+      - '**'
+    tags:
+      - 'v*.*.*'
 
 jobs:
   buildConfig:
@@ -13,27 +18,51 @@ jobs:
     needs: buildConfig
     runs-on: self-hosted
 
+    env:
+      projectName: ${{ needs.buildConfig.outputs.repositoryName }}"
+      devAppPool: ${{ secrets.DEVAPPPOOL }}
+      devTargetLocation: ${{ secrets.DEVTARGETLOCATION }}
+      projectPath: ${{ needs.buildConfig.outputs.repositoryName }}\${{ needs.buildConfig.outputs.repositoryName }}.csproj
+
+    outputs:
+      devAppPool:
+        description: "Dev Application Pool"
+        value: ${{ env.devAppPool }}
+
+      devTargetLocation:
+        description: "Dev Environment Deployment Location"
+        value: ${{ env.devTargetLocation }}
+
     steps:
     - uses: actions/checkout@v2
+
+    - name: "Print Repo Name"
+      run: echo "Repo Name = ${{ needs.buildConfig.outputs.repositoryName }}"
+
+    - name: "Print Branch Type"
+      run: echo "Branch Type = ${{ needs.buildConfig.outputs.branchType }}"
+
+    - name: "Print Version Number"
+      run: echo "Version = ${{ needs.buildConfig.outputs.buildVersion }}"
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-        source-url: https://nuget.pkg.github.com/pcholera/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Ensure GitHub NuGet Source
+      run: dotnet nuget add source https://nuget.pkg.github.com/pcholera/index.json -n github -u ${{ github.actor }}  -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
 
     - name: Build
-      run: dotnet build --configuration Release
+      run: dotnet build ${{ env.projectPath }} --configuration Release
 
     - name: Publish
-      run: dotnet publish --configuration Release --no-restore --output .\Publish /p:AssemblyVersion=${{ needs.buildConfig.outputs.buildVersion }}
+      run: dotnet publish ${{ env.projectPath }} --configuration Release --no-restore --output .\Publish /p:AssemblyVersion=${{ needs.buildConfig.outputs.buildVersion }}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: TestProject - ${{ needs.buildConfig.outputs.buildVersion }}
+        name: ${{ env.projectName }} - ${{ needs.buildConfig.outputs.buildVersion }}
         path: .\Publish
 
     - name: Save Artifact Locally
@@ -45,6 +74,6 @@ jobs:
     needs: [ build, buildConfig ]
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: "RunnerTest"
-      targetLocation: "C:\\Hartree\\Sites\\RunnerTest"
-      assemblyVersion: ${{ needs.buildConfig.outputs.assemblyVersion }}
+      appPoolName: ${{ needs.build.outputs.devAppPool }}
+      targetLocation: ${{ needs.build.outputs.devTargetLocation }}
+      buildVersion: ${{ needs.buildConfig.outputs.buildVersion }}

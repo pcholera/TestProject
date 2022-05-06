@@ -9,11 +9,15 @@ on:
         required: true
         type: string
 
+env:
+  prodAppPool: ${{ secrets.PRODAPPPOOL }}
+  prodTargetLocation: ${{ secrets.PRODTARGETLOCATION }}
+
 jobs:
   deploy:
     name: Deploy
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: "RunnerTestProd"
-      targetLocation: "C:\\Hartree\\Sites\\RunnerTestProd"
+      appPoolName: ${{ env.prodAppPool }}
+      targetLocation: ${{ env.prodTargetLocation }}
       assemblyVersion: ${{ github.event.inputs.assemblyVersion }}

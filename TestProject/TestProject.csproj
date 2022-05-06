@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.5.7.4" />
-    <PackageReference Include="RunnerTest" Version="0.0.44" />
+    <PackageReference Include="RunnerTest" Version="0.1.240" />
   </ItemGroup>
 
 </Project>
