@@ -21,10 +21,6 @@ jobs:
     env:
       projectName: ${{ needs.buildConfig.outputs.repositoryName }}
       projectPath: ${{ needs.buildConfig.outputs.repositoryName }}\${{ needs.buildConfig.outputs.repositoryName }}.csproj
-    
-    outputs:
-      devAppPool: ${{ steps.devAppPool.outputs.devAppPool }}
-      devTargetLocation: ${{ steps.devTargetLocation.outputs.devTargetLocation }}
 
     steps:
     - uses: actions/checkout@v2
