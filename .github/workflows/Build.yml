@@ -19,7 +19,7 @@ jobs:
     runs-on: self-hosted
 
     env:
-      projectName: ${{ needs.buildConfig.outputs.repositoryName }}"
+      projectName: ${{ needs.buildConfig.outputs.repositoryName }}
       projectPath: ${{ needs.buildConfig.outputs.repositoryName }}\${{ needs.buildConfig.outputs.repositoryName }}.csproj
     
     outputs:
@@ -52,9 +52,7 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Ensure GitHub NuGet Source
-      run: |
-        dotnet nuget list source
-        dotnet nuget add source https://nuget.pkg.github.com/pcholera/index.json -n githubTest -u ${{ github.actor }}  -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+      run: dotnet nuget add source https://nuget.pkg.github.com/pcholera/index.json -n githubTest -u ${{ github.actor }}  -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
 
     - name: Build
       run: dotnet build ${{ env.projectPath }} --configuration Release
