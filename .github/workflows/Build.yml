@@ -6,9 +6,6 @@ on:
       - '**'
     tags:
       - 'v*.*.*'
-env:
-  devAppPool: ${{ secrets.DEVAPPPOOL }}
-  devTargetLocation: ${{ secrets.DEVTARGETLOCATION }}
 
 jobs:
   buildConfig:
@@ -23,6 +20,8 @@ jobs:
 
     env:
       projectName: ${{ needs.buildConfig.outputs.repositoryName }}"
+      devAppPool: ${{ steps.devAppPool.outputs.devAppPool }}
+      devTargetLocation: ${{ steps.devTargetLocation.outputs.devTargetLocation }}
       projectPath: ${{ needs.buildConfig.outputs.repositoryName }}\${{ needs.buildConfig.outputs.repositoryName }}.csproj
 
     steps:
@@ -36,6 +35,14 @@ jobs:
 
     - name: "Print Version Number"
       run: echo "Version = ${{ needs.buildConfig.outputs.buildVersion }}"
+
+    - name: "devAppPool"
+      id: devAppPool
+      run: echo '::set-output name=devAppPool::${{ secrets.DEVAPPPOOL }}'
+
+    - name: "devTargetLocation"
+      id: devTargetLocation
+      run: echo '::set-output name=devTargetLocation::${{ secrets.DEVTARGETLOCATION }}'
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -66,6 +73,6 @@ jobs:
     needs: [ build, buildConfig ]
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: ${{ env.devAppPool }}
-      targetLocation: ${{ env.devTargetLocation }}
+      appPoolName: ${{ needs.build.outputs.devAppPool }}
+      targetLocation: ${{ needs.build.outputs.devTargetLocation }}
       buildVersion: ${{ needs.buildConfig.outputs.buildVersion }}
