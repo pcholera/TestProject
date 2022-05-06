@@ -11,12 +11,10 @@ on:
     secrets:
       appPoolName:
         description: 'IIS Application Pool Name'
-        default: 'Espresso'
         required: true
         type: string
       targetLocation:
         description: 'Trarget Location For Application'
-        default: '\\nyallegrowebd01\c$\inetpub\wwwroot\Espresso'
         required: true
         type: string
 
