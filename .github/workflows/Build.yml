@@ -6,6 +6,9 @@ on:
       - '**'
     tags:
       - 'v*.*.*'
+env:
+  devAppPool: ${{ secrets.DEVAPPPOOL }}
+  devTargetLocation: ${{ secrets.DEVTARGETLOCATION }}
 
 jobs:
   buildConfig:
@@ -20,18 +23,7 @@ jobs:
 
     env:
       projectName: ${{ needs.buildConfig.outputs.repositoryName }}"
-      devAppPool: ${{ secrets.DEVAPPPOOL }}
-      devTargetLocation: ${{ secrets.DEVTARGETLOCATION }}
       projectPath: ${{ needs.buildConfig.outputs.repositoryName }}\${{ needs.buildConfig.outputs.repositoryName }}.csproj
-
-    outputs:
-      devAppPool:
-        description: "Dev Application Pool"
-        value: ${{ env.devAppPool }}
-
-      devTargetLocation:
-        description: "Dev Environment Deployment Location"
-        value: ${{ env.devTargetLocation }}
 
     steps:
     - uses: actions/checkout@v2
@@ -74,6 +66,6 @@ jobs:
     needs: [ build, buildConfig ]
     uses: ./.github/workflows/Deploy.yml
     with:
-      appPoolName: ${{ needs.build.outputs.devAppPool }}
-      targetLocation: ${{ needs.build.outputs.devTargetLocation }}
+      appPoolName: ${{ env.devAppPool }}
+      targetLocation: ${{ env.devTargetLocation }}
       buildVersion: ${{ needs.buildConfig.outputs.buildVersion }}
