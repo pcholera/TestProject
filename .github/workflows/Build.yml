@@ -68,7 +68,7 @@ jobs:
 
     - name: Save Artifact Locally
       run: |
-        Copy-Item -Path .\Publish -Destination ..\Publish\TestProject\${{ needs.buildConfig.outputs.buildVersion }} -recurse -Force      run: dotnet nuget add source https://nuget.pkg.github.com/pcholera/index.json -n github -u ${{ github.actor }}  -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+        Copy-Item -Path .\Publish -Destination ..\Publish\TestProject\${{ needs.buildConfig.outputs.buildVersion }} -recurse -Force
 
     - name: Cleanup Github Nuget Source
       if: always()
