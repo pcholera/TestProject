@@ -2,7 +2,7 @@ name: Build Cleanup Job
 
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '20 7 * * *'
 jobs:
   build:
     runs-on: self-hosted
