@@ -1,0 +1,12 @@
+name: Build Cleanup Job
+
+on:
+  schedule:
+    - cron: '* * * * *'
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Clean Saved Builds
+        run: |
+          Get-ChildItem -Path "..\Publish\TestProject" -Directory -recurse| where {$_.LastWriteTime -le $(get-date).Adddays(-2)} | Remove-Item -recurse -force
